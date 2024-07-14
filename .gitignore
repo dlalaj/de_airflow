@@ -2,3 +2,5 @@ volume/
 env/
 dummy_data/
 .env
+logs/*
+!logs/.gitkeep
