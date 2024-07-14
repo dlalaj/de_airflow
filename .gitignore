@@ -1,0 +1,4 @@
+volume/
+env/
+dummy_data/
+.env
