@@ -1,6 +1,15 @@
-volume/
+# Python virtual environment 
 env/
-dummy_data/
-.env
+_data/
+
+# Airflow logs
 logs/*
 !logs/.gitkeep
+
+# Docker volume mounts
+_localstack_volume
+_psql_volume
+
+# Environment variables
+.env
+airflow_creds.env

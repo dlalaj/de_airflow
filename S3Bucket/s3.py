@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 load_dotenv()
 
 # Configure logging
-logging.config.fileConfig(os.getenv('LOGGER_PATH'))
+logging.config.fileConfig(os.getenv('LOGGER_CONFIG_PATH'))
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
@@ -91,8 +91,3 @@ class S3Boto:
             return response['Body'].read().decode('utf-8')
         except ClientError as e:
             logger.error(e)
-
-# cli = S3Boto('http://localhost:4566', os.getenv('AWS_ACCESS_KEY_ID'), os.getenv('AWS_SECRET_ACCESS_KEY'))
-# print(cli.list_buckets())
-# cli.create_bucket('public-read-write', 'new')
-# print(cli.list_buckets())

@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  airflow:
+    container_name: apache_airflow
+    build: .
+    image: airflow
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
+    command: bash -c "/usr/bin/supervisord"
+    volumes:
+      - ./dags:/airflow/dags
+  
+  localstack:
+    container_name: aws_s3_localstack
+    image: localstack/localstack
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEBUG=${DEBUG:-0}
+    volumes:
+      - ./_localstack_volume:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  
+  database:
+    container_name: postgres_db
+    image: postgres:14-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+     - ./_psql_volume:/var/lib/postgresql/data
