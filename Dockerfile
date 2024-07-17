@@ -15,7 +15,7 @@ COPY airflow_creds.env ${AIRFLOW_HOME}/airflow_creds.env
 RUN pip install -r requirements.txt
 
 # Initialize database and toggle example dags off
-RUN airflow db init
+RUN airflow db migrate
 COPY ./config/airflow.cfg airflow.cfg
 
 # Create admin user with provided credentials - run only once when image is built

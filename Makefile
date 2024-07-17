@@ -1,5 +1,5 @@
 build-airflow:
-	sudo docker compose build
+	docker compose build
 
 start-airflow:
-	sudo docker compose up
+	docker compose up

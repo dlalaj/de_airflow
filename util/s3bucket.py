@@ -9,6 +9,7 @@ from botocore.exceptions import ClientError
 # Add path of parent directory and load env variables
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 load_dotenv()
+print(os.getenv('LOGGER_CONFIG_PATH'))
 
 # Configure logging
 logging.config.fileConfig(os.getenv('LOGGER_CONFIG_PATH'))

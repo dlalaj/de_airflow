@@ -2,6 +2,9 @@
 env/
 _data/
 
+# Cache
+__pycache__
+
 # Airflow logs
 logs/*
 !logs/.gitkeep

@@ -12,6 +12,7 @@ services:
     command: bash -c "/usr/bin/supervisord"
     volumes:
       - ./dags:/airflow/dags
+      - ./util:/airflow/util
   
   localstack:
     container_name: aws_s3_localstack
