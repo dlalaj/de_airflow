@@ -1,13 +1,4 @@
 # Movies Table
-# +---------------+---------+
-# | Column Name   | Type    |
-# +---------------+---------+
-# | movie_id      | int     |
-# | title         | varchar |
-# | released_at    | date    |
-# +---------------+---------+
-# movie_id is the primary key
-
 CREATE_movies_TABLE = """
     CREATE TABLE IF NOT EXISTS movies(
         movie_id iNT PRIMARY KEY,
@@ -19,14 +10,6 @@ CREATE_movies_TABLE = """
 """
 
 # Users Table
-# +---------------+---------+
-# | Column Name   | Type    |
-# +---------------+---------+
-# | user_id       | int     |
-# | name          | varchar |
-# +---------------+---------+
-# user_id is the primary key (column with unique values) for this table.
-
 CREATE_users_TABLE = """
     CREATE TABLE IF NOT EXISTS users(
         user_id INT PRIMARY KEY,
@@ -37,18 +20,6 @@ CREATE_users_TABLE = """
 """
 
 # MovieRating
-# +---------------+---------+
-# | Column Name   | Type    |
-# +---------------+---------+
-# | movie_id      | int     |
-# | user_id       | int     |
-# | rating        | int     |
-# | created_at    | date    |
-# +---------------+---------+
-# (movie_id, user_id) is the primary key (column with unique values) for this table.
-# movied_id is a foreign key to movies table
-# user_id is a foreign key to users table
-
 CREATE_ratings_TABLE = """
     CREATE TABLE IF NOT EXISTS movieratings(
         movie_id INT,
