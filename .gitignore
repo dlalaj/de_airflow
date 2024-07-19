@@ -16,3 +16,6 @@ _psql_volume
 # Environment variables
 .env
 airflow_creds.env
+
+# Local helper scripts
+/scripts

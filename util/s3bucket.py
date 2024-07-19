@@ -7,14 +7,13 @@ from dotenv import load_dotenv
 from botocore.exceptions import ClientError
 
 # Add path of parent directory and load env variables
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 load_dotenv()
-print(os.getenv('LOGGER_CONFIG_PATH'))
+logger_conf_dir = os.path.join(root_dir, os.getenv('LOGGER_CONFIG_PATH'))
 
 # Configure logging
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG_PATH'))
+logging.config.fileConfig(logger_conf_dir)
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
 
 class S3Boto:
     '''
@@ -87,7 +86,7 @@ class S3Boto:
         Read the content of the file as a UTF-8 encoded string
         '''
         try:
-            logger.info(f"Reading file: {object_name} to bucket: {bucket_name}")
+            logger.info(f"Reading file: {object_name} from bucket: {bucket_name}")
             response = self._client.get_object(Bucket=bucket_name, Key=object_name)
             return response['Body'].read().decode('utf-8')
         except ClientError as e:
