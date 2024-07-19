@@ -22,8 +22,8 @@ logger = logging.getLogger()
 
 def read_csv_from_s3(file_name: str, bucket_name: str) -> pd.DataFrame:
     # Read CSV content from S3 bucket, assuming small CSV file that can be loaded to memory to avoid local download
-    boto_client = S3Boto(os.getenv('AWS_S3_CONN_URL'), os.getenv('AWS_ACCESS_KEY_ID'), os.getenv('AWS_SECRET_ACCESS_KEY'))
-    file_content = boto_client.read_file(bucket_name, file_name)
+    s3_client = S3Boto(os.getenv('AWS_S3_CONN_URL'), os.getenv('AWS_ACCESS_KEY_ID'), os.getenv('AWS_SECRET_ACCESS_KEY'))
+    file_content = s3_client.read_file(bucket_name, file_name)
 
     # Put content into pandas dataframe
     df = pd.read_csv(StringIO(file_content))

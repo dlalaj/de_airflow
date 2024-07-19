@@ -4,12 +4,13 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from airflow import DAG
 from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
-from airflow.providers.amazon.aws.transfers.local_to_s3 import LocalFilesystemToS3Operator
 from airflow.operators.python import PythonOperator
 
 # Add project root dir to path for imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 from util.movie_ratings.movie_ratings_processing import load_data_to_database
+from util.movie_ratings.movie_ratings_reports import generate_csv_reports_to_local, send_report_to_s3
 
 # Load environment variables
 load_dotenv()
@@ -58,6 +59,19 @@ with DAG(dag_id='movie_ratings_csv_process_and_report',
     read_csvs_to_db = PythonOperator(task_id='read_csv_to_db',
                                     python_callable=load_data_to_database,
                                     op_args=[csv_names, os.getenv('AWS_S3_BUCKET_NAME')])
+    
+    # TODO: Below it would be best that the parameters to 'send_report_to_s3' are not hardcoded but are 
+    # instead piped from 'generate_csv_reports_to_local' via XComs, perhaps can consider in the future.
+
+    generate_report = PythonOperator(task_id='generate_csv_reports',
+                                     python_callable=generate_csv_reports_to_local,
+                                     op_args=[['user_review_count.csv', 'movie_review_count.csv']])
+    
+    save_reports_to_S3 = PythonOperator(task_id='save_reports_to_S3',
+                                        python_callable=send_report_to_s3,
+                                        op_args=[[os.path.join(root_dir, '_data/user_review_count.csv'),
+                                                  os.path.join(root_dir, '_data/movie_review_count.csv')]])
 
     # Define task dependencies
     [detect_s3_movie_csv_upload, detect_s3_user_csv_upload, detect_s3_rating_csv_upload] >> read_csvs_to_db
+    read_csvs_to_db >> generate_report >> save_reports_to_S3

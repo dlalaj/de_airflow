@@ -1,10 +1,15 @@
 import os
+import sys
 import logging
 import logging.config
 import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from movie_sql_queries import COUNT_REVIEWS_PER_USER, MOST_REVIEWS_MOVIES
+
+# Add util dir to path to import S3Boto
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from s3bucket import S3Boto
 
 # Read environment variables
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -40,4 +45,14 @@ def generate_csv_reports_to_local(user_report_filename: str, movie_report_filena
 
     return [local_user_report_path, local_movie_report_path]
 
+def send_report_to_s3(file_names: list[str]) -> None:
+
+    logger.info(f"Establishing connection to S3 Bucket")
+    s3_client = S3Boto(os.getenv('AWS_S3_CONN_URL'), os.getenv('AWS_ACCESS_KEY_ID'), os.getenv('AWS_SECRET_ACCESS_KEY'))
+
+    for file in file_names:
+        file_name, _ = os.path.splitext(os.path.basename(file))
+        
+        logger.info(f"Saving file: {file_name} to S3 Bucket")
+        s3_client.upload_file(file, os.getenv('AWS_S3_BUCKET_NAME'), file_name)
 
