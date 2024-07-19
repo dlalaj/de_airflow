@@ -1,8 +1,10 @@
 # Python virtual environment 
 env/
+
+# Local data directory
 _data/
 
-# Cache
+# Python runtime cache
 __pycache__
 
 # Airflow logs
